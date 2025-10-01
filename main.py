@@ -39,7 +39,10 @@ def main():
         for obj in asteroids:
             if obj.collides_with(player):
                 print("Game over!")
-                return
+                #return
+            for obj2 in asteroids:
+                if obj2 != obj and obj2.collides_with(obj):
+                    obj.bounce(obj2)
 
         for obj in shots:
             for obj2 in asteroids:
