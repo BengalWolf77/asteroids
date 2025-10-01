@@ -36,13 +36,15 @@ def main():
             asset.draw(screen)
         updatable.update(dt)
 
+        asteroid_collisions = []
         for obj in asteroids:
             if obj.collides_with(player):
                 print("Game over!")
-                #return
+                return
             for obj2 in asteroids:
-                if obj2 != obj and obj2.collides_with(obj):
+                if obj2 != obj and obj2.collides_with(obj) and obj2 not in asteroid_collisions:
                     obj.bounce(obj2)
+                    asteroid_collisions.append(obj2)
 
         for obj in shots:
             for obj2 in asteroids:

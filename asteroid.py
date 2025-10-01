@@ -37,12 +37,18 @@ class Asteroid(CircleShape):
     def bounce(self, asteroid2):
         #breakpoint()
         init_velo = self.velocity
+        size_diff = self.radius / asteroid2.radius
 
-        if pygame.math.Vector2.distance_to(self.position,asteroid2.position) < asteroid2.radius:
+        if pygame.math.Vector2.distance_to(self.position,asteroid2.position) < max(self.radius, asteroid2.radius) + ASTEROID_MIN_RADIUS/2:
             self.split()
             return
 
-        self.velocity = pygame.math.Vector2.reflect(init_velo, asteroid2.velocity) 
-        asteroid2.velocity = pygame.math.Vector2.reflect(asteroid2.velocity, init_velo) 
-        
-        
+        if size_diff > 1:
+            self.velocity = pygame.math.Vector2.reflect(init_velo, asteroid2.velocity * (size_diff - (1 - size_diff)))
+            asteroid2.velocity = pygame.math.Vector2.reflect(asteroid2.velocity, init_velo * -size_diff) 
+        elif size_diff < 1:
+            self.velocity = pygame.math.Vector2.reflect(init_velo, asteroid2.velocity * (1 + (1 - size_diff)))
+            asteroid2.velocity = pygame.math.Vector2.reflect(asteroid2.velocity, init_velo * -size_diff) 
+        else:
+            self.velocity = pygame.math.Vector2.reflect(init_velo, asteroid2.velocity)
+            asteroid2.velocity = pygame.math.Vector2.reflect(asteroid2.velocity,init_velo)
